@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router';
 import PostBody from '../components/PostBody';
 import PostType from '../types/common/post';
 import { getAllPosts, getPostBySlug } from './api/api';
@@ -14,11 +13,7 @@ type Props = {
     preview?: boolean;
 };
 
-const DetailPage = ({ post, morePosts, preview }: Props) => {
-    const router = useRouter();
-    const { id } = router.query as { id: string };
-
-    console.log(id, 'ssdff', post.content);
+const DetailPage = ({ post }: Props) => {
     return <PostBody content={post.content} />;
 };
 
