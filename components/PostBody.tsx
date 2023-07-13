@@ -1,7 +1,8 @@
 import styled from '@emotion/styled';
 import hljs from 'highlight.js/lib/core';
 import javascript from 'highlight.js/lib/languages/javascript';
-import { useEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
+
 hljs.registerLanguage('javascript', javascript);
 
 type Props = {
@@ -20,11 +21,12 @@ const Container = styled.div`
 const PostBody = ({ content }: Props) => {
     const [highlightedContent, setHighlightedContent] = useState(content);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         import('./../util/highlightCodeInHTML').then(({ highlightCodeInHTML }) => {
             setHighlightedContent(highlightCodeInHTML(content));
         });
     }, []);
+
     return (
         <Container>
             <div dangerouslySetInnerHTML={{ __html: highlightedContent }} />
