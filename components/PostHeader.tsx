@@ -16,7 +16,7 @@ const ImageLoader = ({ src }: { src: string }) => {
 };
 export const PostHeader = ({ title, image }: PostHeaderProps) => {
     return (
-        <Header>
+        <div>
             <h1>{title}</h1>
             <Image
                 src={image}
@@ -28,6 +28,6 @@ export const PostHeader = ({ title, image }: PostHeaderProps) => {
                 placeholder="blur"
                 blurDataURL={image}
             />
-        </Header>
+        </div>
     );
 };

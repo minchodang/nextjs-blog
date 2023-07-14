@@ -6,7 +6,7 @@ type PostSlugType = {
     fields: string[];
 };
 
-type Items = {
+export type Items = {
     [key: string]: string;
 };
 

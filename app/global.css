@@ -1,0 +1,10 @@
+body {
+    height: 100%;
+    min-height: 100%;
+    background: black;
+    color: white;
+    padding: 20px;
+}
+a {
+    all: unset;
+}
