@@ -1,7 +1,6 @@
-import PostBody from '../components/PostBody';
+import { PostBody } from '../components/PostBody';
 import PostType from '../types/common/post';
 import { getAllPosts, getPostBySlug } from './api/api';
-import markdownToHtml from './api/markdownToHtml';
 type Params = {
     params: {
         id: string;
@@ -14,7 +13,8 @@ type Props = {
 };
 
 const DetailPage = ({ post }: Props) => {
-    return <PostBody content={post.content} />;
+    console.log(post);
+    return <PostBody post={post} />;
 };
 
 export default DetailPage;
@@ -24,13 +24,12 @@ export async function getStaticProps({ params }: Params) {
         slug: params.id,
         fields: ['title', 'date', 'slug', 'author', 'content', 'ogImage', 'coverImage'],
     });
-    const content = await markdownToHtml(post.content || '');
+    // const content = await markdownToHtml(post.content || '');
 
     return {
         props: {
             post: {
                 ...post,
-                content,
             },
         },
     };
