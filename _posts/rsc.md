@@ -1,7 +1,7 @@
 ---
 title: '리액트 18 - 소개와 모범사례: 리액트 서버 컴포넌트'
 excerpt: '리액트 18의 새로운 특징 중 하나인 리액트 서버 컴포넌트를 소개하고, 어떻게 사용하는지 알아보는 블로그 글입니다. 서버 컴포넌트의 장점과 함께 간단한 프로젝트 구성 예시를 확인해보세요.'
-coverImage: '/assets/blog/react-18-server-components/cover.jpg'
+coverImage: 'https://addyosmani.com/assets/images/react-server-components@2x.png'
 date: '2023-07-01T08:15:00.000Z'
 author:
     name: 08베이식

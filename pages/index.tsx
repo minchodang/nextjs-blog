@@ -18,8 +18,6 @@ const Container = styled.div`
 `;
 
 const Home = ({ allPosts }: Props) => {
-    console.log(allPosts);
-
     return (
         <Container>
             <h1>All Posts</h1>
