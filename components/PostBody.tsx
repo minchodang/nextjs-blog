@@ -1,66 +1,31 @@
-import styled from '@emotion/styled';
-import Image from 'next/image';
-import ReactMarkdown from 'react-markdown';
-import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
-import css from 'react-syntax-highlighter/dist/cjs/languages/prism/css';
-import js from 'react-syntax-highlighter/dist/cjs/languages/prism/javascript';
-import atomDark from 'react-syntax-highlighter/dist/cjs/styles/prism/atom-dark';
-import PostType from '../types/common/post';
-import { PostHeader } from './PostHeader';
-SyntaxHighlighter.registerLanguage('js', js);
-SyntaxHighlighter.registerLanguage('css', css);
+import { MDXRemote } from 'next-mdx-remote/rsc';
+// @ts-expect-error RSC
+import remarkA11yEmoji from '@fec/remark-a11y-emoji';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import rehypeSlug from 'rehype-slug';
+import remarkGfm from 'remark-gfm';
+import remarkToc from 'remark-toc';
+import { mdxComponents } from './markdown-components';
 
-type Props = {
-    post: PostType;
-};
-
-const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    padding: 50px;
-`;
-const ImageLoader = ({ src }: { src: string }) => {
-    return src;
-};
-export const PostBody = ({ post }: Props) => {
-    const customRenderers = {
-        p(paragraph: { children?: any; node?: any }) {
-            const { node } = paragraph;
-            if (node.children[0].tagName === 'img') {
-                const image = node.children[0].properties;
-                return (
-                    <div>
-                        <Image
-                            loader={ImageLoader}
-                            src={image.src}
-                            width={300}
-                            height={300}
-                            alt={image.alt}
-                            placeholder="blur"
-                            blurDataURL={image.src}
-                        />
-                    </div>
-                );
-            }
-
-            return <p>{paragraph.children}</p>;
-        },
-        code(code: any) {
-            const { className, children } = code;
-
-            if (className) {
-                return (
-                    <SyntaxHighlighter style={atomDark} language={className.split('-')[1]}>
-                        {children}
-                    </SyntaxHighlighter>
-                );
-            }
-        },
-    };
+export function PostBody({ children }: { children: string }) {
     return (
-        <Container>
-            <PostHeader title={post.title} image={post.coverImage} />
-            <ReactMarkdown components={customRenderers}>{post.content}</ReactMarkdown>
-        </Container>
+        <MDXRemote
+            source={children}
+            options={{
+                mdxOptions: {
+                    remarkPlugins: [
+                        // 깃허브 Flavored 마크다운 지원 추가
+                        remarkGfm,
+                        // 이모티콘 접근성 향상
+                        remarkA11yEmoji,
+                        // 제목을 기반으로 목차를 생성합니다.
+                        remarkToc,
+                    ],
+                    // 함께 작동하여 ID를 추가하고 제목을 연결합니다.
+                    rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
+                },
+            }}
+            components={mdxComponents}
+        />
     );
-};
+}
