@@ -1,37 +1,66 @@
 import styled from '@emotion/styled';
-import hljs from 'highlight.js/lib/core';
-import javascript from 'highlight.js/lib/languages/javascript';
-import { useLayoutEffect, useState } from 'react';
-
-hljs.registerLanguage('javascript', javascript);
+import Image from 'next/image';
+import ReactMarkdown from 'react-markdown';
+import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
+import css from 'react-syntax-highlighter/dist/cjs/languages/prism/css';
+import js from 'react-syntax-highlighter/dist/cjs/languages/prism/javascript';
+import atomDark from 'react-syntax-highlighter/dist/cjs/styles/prism/atom-dark';
+import PostType from '../types/common/post';
+import { PostHeader } from './PostHeader';
+SyntaxHighlighter.registerLanguage('js', js);
+SyntaxHighlighter.registerLanguage('css', css);
 
 type Props = {
-    content: string;
+    post: PostType;
 };
 
 const Container = styled.div`
     display: flex;
     flex-direction: column;
     padding: 50px;
-    img {
-        max-width: calc(100% - 0px);
-    }
 `;
+const ImageLoader = ({ src }: { src: string }) => {
+    return src;
+};
+export const PostBody = ({ post }: Props) => {
+    const customRenderers = {
+        p(paragraph: { children?: any; node?: any }) {
+            const { node } = paragraph;
+            if (node.children[0].tagName === 'img') {
+                const image = node.children[0].properties;
+                return (
+                    <div>
+                        <Image
+                            loader={ImageLoader}
+                            src={image.src}
+                            width={300}
+                            height={300}
+                            alt={image.alt}
+                            placeholder="blur"
+                            blurDataURL={image.src}
+                        />
+                    </div>
+                );
+            }
 
-const PostBody = ({ content }: Props) => {
-    const [highlightedContent, setHighlightedContent] = useState(content);
+            return <p>{paragraph.children}</p>;
+        },
+        code(code: any) {
+            const { className, children } = code;
 
-    useLayoutEffect(() => {
-        import('./../util/highlightCodeInHTML').then(({ highlightCodeInHTML }) => {
-            setHighlightedContent(highlightCodeInHTML(content));
-        });
-    }, []);
-
+            if (className) {
+                return (
+                    <SyntaxHighlighter style={atomDark} language={className.split('-')[1]}>
+                        {children}
+                    </SyntaxHighlighter>
+                );
+            }
+        },
+    };
     return (
         <Container>
-            <div dangerouslySetInnerHTML={{ __html: highlightedContent }} />
+            <PostHeader title={post.title} image={post.coverImage} />
+            <ReactMarkdown components={customRenderers}>{post.content}</ReactMarkdown>
         </Container>
     );
 };
-
-export default PostBody;
